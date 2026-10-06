@@ -1,0 +1,10 @@
+# Rasa 3.6 supports Python 3.8–3.10 only.
+rasa[spacy]==3.6.20
+rasa-sdk==3.6.2
+spacy==3.8.11
+en_core_web_md @ https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.8.0/en_core_web_md-3.8.0-py3-none-any.whl
+requests==2.31.0
+streamlit==1.31.0
+python-dotenv==1.0.1
+pytest==8.3.5
+setuptools<81

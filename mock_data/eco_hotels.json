@@ -1,0 +1,8 @@
+[
+  {"name": "Green Leaf Lodge", "destination": "Lisbon", "eco_certified": true, "certification": "Green Key", "carbon_score": 0.2, "price_score": 0.5},
+  {"name": "EcoStay Lisboa", "destination": "Lisbon", "eco_certified": true, "certification": "EU Ecolabel", "carbon_score": 0.15, "price_score": 0.4},
+  {"name": "Kyoto Forest Ryokan", "destination": "Kyoto", "eco_certified": true, "certification": "Green Key", "carbon_score": 0.1, "price_score": 0.6},
+  {"name": "Bamboo Grove Inn", "destination": "Kyoto", "eco_certified": true, "certification": "EarthCheck", "carbon_score": 0.18, "price_score": 0.3},
+  {"name": "Costa Rica EcoLodge", "destination": "Costa Rica", "eco_certified": true, "certification": "CST (Certification for Sustainable Tourism)", "carbon_score": 0.12, "price_score": 0.5},
+  {"name": "Reykjavik Green Suites", "destination": "Iceland", "eco_certified": true, "certification": "Green Key", "carbon_score": 0.2, "price_score": 0.45}
+]

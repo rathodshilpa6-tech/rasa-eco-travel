@@ -1,0 +1,12 @@
+FROM rasa/rasa-sdk:3.6.2
+
+WORKDIR /app
+COPY ./actions /app/actions
+COPY ./mock_data /app/mock_data
+COPY requirements.txt /app/requirements.txt
+
+USER root
+RUN pip install --no-cache-dir -r requirements.txt || true
+
+EXPOSE 5055
+CMD ["start", "--actions", "actions"]

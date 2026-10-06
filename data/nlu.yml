@@ -1,0 +1,172 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hi
+    - hello
+    - hey there
+    - good morning
+    - good evening
+    - hiya
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+    - that's all for now
+    - thanks, bye
+    - that's everything, thank you
+
+- intent: affirm
+  examples: |
+    - yes
+    - sure
+    - that works
+    - correct
+    - sounds good
+
+- intent: deny
+  examples: |
+    - no
+    - not really
+    - that's not right
+    - nope
+
+- intent: plan_trip
+  examples: |
+    - I want to plan a trip
+    - help me plan a holiday
+    - hi, I want to plan a trip
+    - can you help me plan a sustainable trip
+    - I'd like to organise a low-carbon holiday
+    - plan a trip
+    - let's plan my vacation
+    - I'm planning a getaway
+
+- intent: provide_destination
+  examples: |
+    - I want to go to [Lisbon](destination)
+    - planning a trip to [Kyoto](destination)
+    - somewhere in [Costa Rica](destination)
+    - [Iceland](destination) please
+    - I'm thinking about [Bali](destination)
+    - destination is [Cape Town](destination)
+    - [Lisbon](destination)
+    - [Kyoto](destination)
+    - [Reykjavik](destination)
+    - I'd like to visit [Barcelona](destination)
+    - we're heading to [Amsterdam](destination)
+    - travelling to [Copenhagen](destination)
+    - a trip to [Vienna](destination) sounds nice
+    - I want to go to [Lisbon](destination) in [June](date)
+    - planning a trip to [Kyoto](destination) [next month](date)
+    - [Berlin](destination) for a city break
+    - I'm going to [Edinburgh](destination)
+    - thinking of [New Zealand](destination)
+
+- intent: provide_dates
+  examples: |
+    - [next month](date)
+    - from [3rd to 10th March](date)
+    - [15 June 2027](date)
+    - travelling in [early September](date)
+    - [10-15 December](date)
+    - [next week](date)
+    - [this summer](date)
+    - we leave on [April 4th](date)
+    - [May 2027](date)
+    - sometime in [October](date)
+    - [2 to 9 August](date)
+    - over [Christmas](date)
+
+- intent: provide_budget
+  examples: |
+    - my budget is [1500](budget) dollars
+    - around [2000](budget) USD
+    - I can spend up to [800](budget)
+    - budget of [3000](budget)
+    - about [500](budget) dollars total
+    - [1200](budget)
+    - $[2500](budget)
+    - roughly [4000](budget) for everything
+    - no more than [950](budget) dollars
+    - [700](budget) usd
+
+- intent: provide_sustainability_preference
+  examples: |
+    - I want the [lowest carbon footprint possible]{"entity": "sustainability_level", "value": "high"}
+    - as [low impact as possible]{"entity": "sustainability_level", "value": "high"}
+    - sustainability is my [top priority]{"entity": "sustainability_level", "value": "high"}
+    - [high](sustainability_level) priority on sustainability
+    - [very important]{"entity": "sustainability_level", "value": "high"}
+    - [balance cost and impact]{"entity": "sustainability_level", "value": "medium"}
+    - [medium](sustainability_level) priority on sustainability
+    - [somewhat important]{"entity": "sustainability_level", "value": "medium"}
+    - a [balance]{"entity": "sustainability_level", "value": "medium"} of both
+    - I [care more about cost]{"entity": "sustainability_level", "value": "low"} than emissions
+    - [cost matters most]{"entity": "sustainability_level", "value": "low"}
+    - [low](sustainability_level) priority, cost matters more
+    - [not that important]{"entity": "sustainability_level", "value": "low"}
+
+- intent: ask_carbon_footprint
+  examples: |
+    - how much CO2 will my flight produce
+    - what's the carbon footprint of taking the train instead
+    - compare emissions between flying and driving
+    - how green is this transport option
+    - carbon footprint of a flight from London to Rome
+    - emissions of getting there
+    - how much carbon would the trip produce
+    - train vs plane emissions
+
+- intent: ask_eco_hotels
+  examples: |
+    - show me eco-certified hotels
+    - are there green hotels in the area
+    - I want sustainable accommodation
+    - list eco-friendly places to stay
+    - certified green hotels near the destination
+    - eco hotels in [Lisbon](destination)
+    - where can I stay sustainably in [Kyoto](destination)
+    - green accommodation please
+
+- intent: ask_green_transport
+  examples: |
+    - what public transport is available
+    - greenest way to get around
+    - is there a train option
+    - low emission transport near me
+    - can I bike or use public transit there
+    - how do I get around without a car
+
+- intent: ask_cultural_activities
+  examples: |
+    - what sustainable activities can I do
+    - eco-tours in the area
+    - community-based tourism experiences
+    - cultural activities that support local communities
+    - responsible tourism activities
+    - what sustainable activities are there in [Kyoto](destination)
+    - things to do in [Lisbon](destination) that support locals
+
+- intent: request_human_advisor
+  examples: |
+    - I want to speak to a real person
+    - can a human help me with this itinerary
+    - connect me with a travel advisor
+    - this is too complex, I need expert help
+    - transfer me to a human agent
+    - can I speak to a human advisor
+    - talk to a human
+    - I need a multi-country itinerary, can an expert help
+
+- intent: out_of_scope
+  examples: |
+    - what's the weather like on Mars
+    - tell me a joke
+    - who won the football match
+    - can you write my essay
+    - what's the capital of France
+    - order me a pizza

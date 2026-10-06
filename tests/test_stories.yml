@@ -1,0 +1,95 @@
+version: "3.1"
+
+stories:
+
+- story: test happy path with adaptive trip intake
+  steps:
+    - user: |
+        hi
+      intent: greet
+    - action: utter_greet
+    - user: |
+        I want to go to [Lisbon](destination)
+      intent: provide_destination
+    - slot_was_set:
+        - destination: Lisbon
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+    - user: |
+        [next month](date)
+      intent: provide_dates
+    - action: trip_intake_form
+    - user: |
+        my budget is [1500](budget) dollars
+      intent: provide_budget
+    - action: trip_intake_form
+    - user: |
+        /provide_sustainability_preference{"sustainability_level":"high"}
+      intent: provide_sustainability_preference
+    - action: trip_intake_form
+    - active_loop: null
+    - action: utter_trip_summary
+    - action: action_geocode_location
+    - action: action_query_eco_accommodation
+    - action: action_query_carbon_footprint
+    - action: action_rank_recommendations
+    - action: utter_anything_else
+
+- story: test direct carbon question edge case (no prior context)
+  steps:
+    - user: |
+        how much CO2 will my flight produce
+      intent: ask_carbon_footprint
+    - action: action_query_carbon_footprint
+
+- story: test question mid-intake resumes the form
+  steps:
+    - user: |
+        I want to plan a trip
+      intent: plan_trip
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+    - user: |
+        [Kyoto](destination)
+      intent: provide_destination
+    - action: trip_intake_form
+    - user: |
+        show me eco-certified hotels
+      intent: ask_eco_hotels
+    - action: action_query_eco_accommodation
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+
+- story: test fallback escalates after two failed attempts
+  steps:
+    - user: |
+        asdkjhaskjdh
+      intent: nlu_fallback
+    - action: action_two_stage_clarification
+    - slot_was_set:
+        - handover_requested: false
+    - user: |
+        qwpoeiruty zxmcnv
+      intent: nlu_fallback
+    - action: action_two_stage_clarification
+    - slot_was_set:
+        - handover_requested: true
+    - action: action_package_handover_context
+    - action: utter_handover_notice
+
+- story: test explicit human advisor request mid-flow keeps collected slots
+  steps:
+    - user: |
+        I want to go to [Costa Rica](destination)
+      intent: provide_destination
+    - slot_was_set:
+        - destination: Costa Rica
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+    - user: |
+        can I speak to a human advisor
+      intent: request_human_advisor
+    - action: action_deactivate_loop
+    - active_loop: null
+    - action: action_package_handover_context
+    - action: utter_handover_notice

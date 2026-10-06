@@ -1,0 +1,6 @@
+[
+  {"destination": "Lisbon", "options": ["Metro (4 lines) and historic electric trams", "Gira public bike-share, including e-bikes", "CP regional trains to Sintra and Cascais"]},
+  {"destination": "Kyoto", "options": ["City subway (2 lines) and extensive city bus network", "Bicycle rental — the city centre is flat and compact", "JR / Keihan / Hankyu rail for day trips (e.g. Nara, Osaka)"]},
+  {"destination": "Costa Rica", "options": ["Public intercity buses connect most towns cheaply", "Shared shuttle vans between main tourist areas", "Commuter train around the San José metro area"]},
+  {"destination": "Iceland", "options": ["Strætó public buses in Reykjavík and between towns", "Walking and city bikes in central Reykjavík", "Note: Iceland has no railway — shared or electric car hire is the main option for remote areas"]}
+]

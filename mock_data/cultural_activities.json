@@ -1,0 +1,6 @@
+[
+  {"destination": "Lisbon", "name": "Community bike tour of Alfama", "description": "Locally-run, low-emission tour supporting neighbourhood cooperatives."},
+  {"destination": "Kyoto", "name": "Traditional craft workshop", "description": "Small-group workshop with a local artisan family, no coach transport required."},
+  {"destination": "Costa Rica", "name": "Indigenous-led rainforest walk", "description": "Guided walk operated by an indigenous community cooperative, proceeds fund conservation."},
+  {"destination": "Iceland", "name": "Geothermal farm visit", "description": "Small-scale farm visit demonstrating renewable geothermal energy use."}
+]

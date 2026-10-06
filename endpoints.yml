@@ -1,0 +1,4 @@
+# Where the Rasa server finds the custom action server.
+# Local: `make actions` serves on :5055. Docker uses endpoints.docker.yml.
+action_endpoint:
+  url: "http://localhost:5055/webhook"

@@ -1,0 +1,125 @@
+version: "3.1"
+
+rules:
+
+- rule: Greet the user
+  steps:
+    - intent: greet
+    - action: utter_greet
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+    - intent: goodbye
+    - action: utter_goodbye
+
+- rule: Out of scope politely redirected
+  steps:
+    - intent: out_of_scope
+    - action: utter_out_of_scope
+
+# --- Trip intake (adaptive: the form only asks for slots still missing) ---
+
+- rule: Start trip intake on request
+  steps:
+    - intent: plan_trip
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+
+- rule: Start trip intake when a destination is given
+  steps:
+    - intent: provide_destination
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+
+- rule: Trip intake complete -> look up and rank options
+  condition:
+    - active_loop: trip_intake_form
+  steps:
+    - action: trip_intake_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    - action: utter_trip_summary
+    - action: action_geocode_location
+    - action: action_query_eco_accommodation
+    - action: action_query_carbon_footprint
+    - action: action_rank_recommendations
+    - action: utter_anything_else
+
+# --- Direct questions (work with or without a destination) ---
+
+- rule: Carbon footprint question
+  steps:
+    - intent: ask_carbon_footprint
+    - action: action_query_carbon_footprint
+
+- rule: Eco hotels question
+  steps:
+    - intent: ask_eco_hotels
+    - action: action_query_eco_accommodation
+
+- rule: Green transport question
+  steps:
+    - intent: ask_green_transport
+    - action: action_query_green_transport
+
+- rule: Cultural activities question
+  steps:
+    - intent: ask_cultural_activities
+    - action: action_query_cultural_activities
+
+# --- Questions asked mid-intake: answer, then resume the form ---
+
+- rule: Carbon question during intake
+  condition:
+    - active_loop: trip_intake_form
+  steps:
+    - intent: ask_carbon_footprint
+    - action: action_query_carbon_footprint
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+
+- rule: Hotels question during intake
+  condition:
+    - active_loop: trip_intake_form
+  steps:
+    - intent: ask_eco_hotels
+    - action: action_query_eco_accommodation
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+
+# --- Human handover ---
+
+- rule: Explicit human advisor request always triggers handover
+  steps:
+    - intent: request_human_advisor
+    - action: action_package_handover_context
+    - action: utter_handover_notice
+
+- rule: Human advisor request during intake stops the form first
+  condition:
+    - active_loop: trip_intake_form
+  steps:
+    - intent: request_human_advisor
+    - action: action_deactivate_loop
+    - active_loop: null
+    - action: action_package_handover_context
+    - action: utter_handover_notice
+
+# --- Two-stage error recovery: clarify once, escalate on the second miss ---
+
+- rule: First misunderstanding -> clarify with quick replies
+  steps:
+    - intent: nlu_fallback
+    - action: action_two_stage_clarification
+    - slot_was_set:
+        - handover_requested: false
+
+- rule: Second consecutive misunderstanding -> hand over to a human
+  steps:
+    - intent: nlu_fallback
+    - action: action_two_stage_clarification
+    - slot_was_set:
+        - handover_requested: true
+    - action: action_package_handover_context
+    - action: utter_handover_notice

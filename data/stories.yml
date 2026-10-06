@@ -1,0 +1,62 @@
+version: "3.1"
+
+stories:
+
+- story: happy path full trip intake
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - intent: provide_destination
+      entities:
+        - destination: Lisbon
+    - slot_was_set:
+        - destination: Lisbon
+    - action: trip_intake_form
+    - active_loop: trip_intake_form
+    - slot_was_set:
+        - requested_slot: travel_dates
+    - intent: provide_dates
+      entities:
+        - date: next month
+    - slot_was_set:
+        - travel_dates: next month
+    - action: trip_intake_form
+    - slot_was_set:
+        - requested_slot: budget
+    - intent: provide_budget
+      entities:
+        - budget: "1500"
+    - slot_was_set:
+        - budget: "1500"
+    - action: trip_intake_form
+    - slot_was_set:
+        - requested_slot: sustainability_level
+    - intent: provide_sustainability_preference
+      entities:
+        - sustainability_level: high
+    - slot_was_set:
+        - sustainability_level: high
+    - action: trip_intake_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    - action: utter_trip_summary
+    - action: action_geocode_location
+    - action: action_query_eco_accommodation
+    - action: action_query_carbon_footprint
+    - action: action_rank_recommendations
+    - action: utter_anything_else
+    - intent: ask_cultural_activities
+    - action: action_query_cultural_activities
+    - intent: goodbye
+    - action: utter_goodbye
+
+- story: complex case escalated after recommendations
+  steps:
+    - intent: ask_eco_hotels
+    - action: action_query_eco_accommodation
+    - intent: ask_carbon_footprint
+    - action: action_query_carbon_footprint
+    - intent: request_human_advisor
+    - action: action_package_handover_context
+    - action: utter_handover_notice

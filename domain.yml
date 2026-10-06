@@ -1,0 +1,232 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - plan_trip
+  - provide_destination
+  - provide_dates
+  - provide_budget
+  - provide_sustainability_preference
+  - ask_carbon_footprint
+  - ask_eco_hotels
+  - ask_green_transport
+  - ask_cultural_activities
+  - request_human_advisor
+  - out_of_scope
+  - nlu_fallback
+
+entities:
+  - destination
+  - budget
+  - date
+  - sustainability_level
+
+slots:
+  destination:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: destination
+      - type: from_text
+        conditions:
+          - active_loop: trip_intake_form
+            requested_slot: destination
+        not_intent:
+          - request_human_advisor
+          - goodbye
+          - out_of_scope
+          - nlu_fallback
+          - greet
+          - plan_trip
+          - ask_carbon_footprint
+          - ask_eco_hotels
+          - ask_green_transport
+          - ask_cultural_activities
+          - provide_dates
+          - provide_budget
+          - provide_sustainability_preference
+  travel_dates:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: date
+      # Inside the trip form, accept the raw answer to "what dates?" so an
+      # unusual date phrase doesn't trap the user in a re-ask loop.
+      - type: from_text
+        conditions:
+          - active_loop: trip_intake_form
+            requested_slot: travel_dates
+        not_intent:
+          - request_human_advisor
+          - goodbye
+          - out_of_scope
+          - nlu_fallback
+          - greet
+          - plan_trip
+          - ask_carbon_footprint
+          - ask_eco_hotels
+          - ask_green_transport
+          - ask_cultural_activities
+          - provide_destination
+          - provide_sustainability_preference
+          - provide_budget
+  budget:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: budget
+      - type: from_text
+        conditions:
+          - active_loop: trip_intake_form
+            requested_slot: budget
+        not_intent:
+          - request_human_advisor
+          - goodbye
+          - out_of_scope
+          - nlu_fallback
+          - greet
+          - plan_trip
+          - ask_carbon_footprint
+          - ask_eco_hotels
+          - ask_green_transport
+          - ask_cultural_activities
+          - provide_destination
+          - provide_sustainability_preference
+          - provide_dates
+  sustainability_level:
+    type: categorical
+    values:
+      - low
+      - medium
+      - high
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: sustainability_level
+  # Filled by custom actions (not from user input).
+  destination_lat:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  destination_lng:
+    type: float
+    influence_conversation: false
+    mappings:
+      - type: custom
+  carbon_estimates:
+    type: any
+    influence_conversation: false
+    mappings:
+      - type: custom
+  eco_hotel_options:
+    type: list
+    influence_conversation: false
+    mappings:
+      - type: custom
+  ranked_options:
+    type: list
+    influence_conversation: false
+    mappings:
+      - type: custom
+  clarification_attempts:
+    type: float
+    initial_value: 0
+    influence_conversation: false
+    mappings:
+      - type: custom
+  handover_requested:
+    type: bool
+    initial_value: false
+    influence_conversation: true
+    mappings:
+      - type: custom
+
+forms:
+  trip_intake_form:
+    required_slots:
+      - destination
+      - travel_dates
+      - budget
+      - sustainability_level
+
+actions:
+  - action_geocode_location
+  - action_query_carbon_footprint
+  - action_query_eco_accommodation
+  - action_query_green_transport
+  - action_query_cultural_activities
+  - action_rank_recommendations
+  - action_two_stage_clarification
+  - action_package_handover_context
+  - action_validate_slot_mappings
+  - validate_trip_intake_form
+
+responses:
+  utter_greet:
+    - text: "Hi, I'm EcoTrip Advisor 🌍. Tell me where you'd like to travel and I'll help you plan a lower-carbon trip."
+
+  utter_goodbye:
+    - text: "Safe and sustainable travels! Come back any time you're planning your next trip."
+
+  utter_ask_destination:
+    - text: "Where are you thinking of travelling to?"
+
+  utter_ask_travel_dates:
+    - text: "What dates are you planning to travel?"
+
+  utter_ask_budget:
+    - text: "What's your approximate budget for this trip (in USD)?"
+
+  utter_ask_sustainability_level:
+    - text: "How important is minimising your carbon footprint for this trip?"
+      buttons:
+        - title: "As low as possible"
+          payload: '/provide_sustainability_preference{{"sustainability_level":"high"}}'
+        - title: "Balance cost and impact"
+          payload: '/provide_sustainability_preference{{"sustainability_level":"medium"}}'
+        - title: "Cost matters most"
+          payload: '/provide_sustainability_preference{{"sustainability_level":"low"}}'
+
+  utter_trip_summary:
+    - text: "Thanks! Planning {destination} ({travel_dates}), budget ~${budget}, sustainability priority: {sustainability_level}. Let me look things up…"
+
+  utter_clarify_intent:
+    - text: "I didn't quite catch that. Could you pick one of these, or rephrase?"
+      buttons:
+        - title: "Plan a trip"
+          payload: "/plan_trip"
+        - title: "Eco-hotels"
+          payload: "/ask_eco_hotels"
+        - title: "Carbon footprint of transport"
+          payload: "/ask_carbon_footprint"
+        - title: "Talk to a human advisor"
+          payload: "/request_human_advisor"
+
+  utter_out_of_scope:
+    - text: "That's outside what I can help with — I focus on planning lower-carbon trips."
+      buttons:
+        - title: "Plan a trip"
+          payload: "/plan_trip"
+        - title: "Eco-hotels"
+          payload: "/ask_eco_hotels"
+        - title: "Talk to a human advisor"
+          payload: "/request_human_advisor"
+
+  utter_handover_notice:
+    - text: "🔄 I'm handing this conversation over to a human sustainability travel advisor, along with everything you've told me so far. They'll be with you shortly."
+      custom:
+        handover: true
+
+  utter_anything_else:
+    - text: "Anything else? I can also suggest green local transport or community-based activities."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

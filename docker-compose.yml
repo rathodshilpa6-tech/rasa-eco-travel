@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  rasa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      - action-server
+    networks:
+      - eco-travel-net
+
+  action-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.actions
+    ports:
+      - "5055:5055"   # expose only for local debugging; keep internal in production
+    env_file:
+      - .env
+    networks:
+      - eco-travel-net
+
+  frontend:
+    image: python:3.10-slim
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - ./requirements.txt:/app/requirements.txt
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt &&
+               streamlit run streamlit_app.py --server.port 8501 --server.address 0.0.0.0"
+    environment:
+      - RASA_REST_URL=http://rasa:5005/webhooks/rest/webhook
+    ports:
+      - "3000:8501"
+    depends_on:
+      - rasa
+    networks:
+      - eco-travel-net
+
+networks:
+  eco-travel-net:
+    driver: bridge
